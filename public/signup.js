@@ -64,16 +64,24 @@ signupForm.addEventListener('submit', (event) => {
         };
 
         // Send form data to the server using Axios
-        axios.post('/signup', formData)
+       
+        axios.post('/signup', formData, { withCredentials: true })
+
             .then(response => {
                  alert('signed up successfully');
             })
+            
             .catch(error => {
+                if (error.response && error.response.status === 409) {
+                    alert('User already exists, please login');
+                } else {
+                  
                 console.error('Error:', error);
                 alert('An error occurred during signup.');
-            });
-    }
+            }
+    
 });
+    }});
 
 // Email validation function (basic email regex pattern)
 function validateEmail(email) {

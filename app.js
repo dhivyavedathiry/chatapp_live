@@ -5,8 +5,6 @@ const path = require('path');
 
 const fs = require('fs');
 
-
-
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -20,8 +18,13 @@ const sequelize = require('./util/database');
 
 const User = require('./models/users');
 
+app.use(cors({
+  origin: "http://localhost:3000",  
+  credentials: true
+}));
 
-app.use(cors());
+
+
 app.use(bodyParser.json());
 app.use(express.json())
 
@@ -36,15 +39,9 @@ app.get('/signup', (req, res) => {
 });
 
 
-
 const userRoute = require('./routes/userroute.js');
 
-
-
-
 app.use( userRoute);
-
-
 
 
 sequelize.sync()
