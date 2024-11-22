@@ -69,6 +69,7 @@ signupForm.addEventListener('submit', (event) => {
 
             .then(response => {
                  alert('signed up successfully');
+                 window.location.href = 'login.html';
             })
             
 

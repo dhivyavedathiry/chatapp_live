@@ -17,6 +17,12 @@ const app = express();
 const sequelize = require('./util/database');
 
 const User = require('./models/users');
+const Message =require('./models/messages');
+
+const Group =require('./models/Groups');
+
+const Groupmember=require('./models/groupmembers');
+
 
 app.use(cors({
   origin: "http://localhost:3000",  
@@ -39,9 +45,23 @@ app.get('/signup', (req, res) => {
 });
 
 
+
 const userRoute = require('./routes/userroute.js');
+const messageRoute = require('./routes/messageroute.js');
 
 app.use( userRoute);
+app.use(messageRoute);
+
+
+User.hasMany(Message);
+Message.belongsTo(User , { constraints: true });
+
+
+User.belongsToMany(Group, { through: Groupmember });
+Group.belongsToMany(User, { through: Groupmember });
+Group.belongsTo(User)
+Group.hasMany(Message);
+Message.belongsTo(Group);
 
 
 sequelize.sync()
