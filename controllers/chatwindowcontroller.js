@@ -36,3 +36,50 @@ exports.postMessage = async (req, res, next) => {
         console.log(error);
     }
 };
+
+exports.getMessages = async (req, res, next) => {
+    try {
+        const lastMessageId = req.query.lastMessageId;
+        let savedMessages;
+        const groupId = req.params.groupId;
+        let whereClause = {};
+
+        if (lastMessageId) {
+            whereClause.id = { [Sequelize.Op.gt]: lastMessageId }
+
+        }
+
+        if (groupId) {
+            whereClause.groupId = groupId;
+        } else {
+            whereClause.groupId = null;
+        }
+
+        savedMessages = await Chats.findAll({
+            where: whereClause,
+            include: [{
+                model: User,
+                attributes: ['name']
+            }],
+            order: [['id', 'ASC']],
+            limit: lastMessageId ? undefined : 100
+        });
+
+
+        const mappedMessages = savedMessages.map(chat => ({
+            id: chat.id,
+            message: chat.message,
+            userName: chat.user ? chat.user.name : 'Unknown User', // Ensure we check if User exists
+            userId: chat.userId,
+            groupId: chat.groupId
+        }));
+
+        res.status(200).json({ savedMessages: mappedMessages, success: true });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: "Internal server error", success: false });
+    }
+};
+
+
