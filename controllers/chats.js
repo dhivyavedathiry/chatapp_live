@@ -37,6 +37,7 @@ exports.postMessage = async (req, res, next) => {
     }
 };
 
+
 exports.getMessages = async (req, res, next) => {
     try {
         const lastMessageId = req.query.lastMessageId;

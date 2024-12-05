@@ -1,73 +1,68 @@
-const dotenv = require('dotenv');
-dotenv.config();
-
-const path = require('path');
-
-const fs = require('fs');
+require('dotenv').config();
 
 const express = require('express');
-const bodyParser = require('body-parser');
+const cors = require("cors");
+const path = require('path');
+const sequelize = require('./util/database.js');
+const archivedChatsJob = require('./util/cronJob.js');
 
-const cors = require('cors');
+const User = require('./models/users.js');
+const Chats = require('./models/chats.js');
+const Groups = require('./models/groups.js');
+const UserGroup = require('./models/userGroup.js');
+const ForgotPassword = require('./models/forgotPassword.js');
+const ArchivedChats = require('./models/archivedChats.js');
+
+
+const userRoutes = require('./routes/user.js');
+const homePageRoutes = require('./routes/homePage.js');
+const chatRoutes = require('./routes/chats.js');
+const groupRoutes = require('./routes/groups.js');
+const adminRoutes = require('./routes/admin.js');
 
 const app = express();
 
+app.use(express.json());
+app.use(cors());
 
-
-const sequelize = require('./util/database');
-
-const User = require('./models/users');
-const Message =require('./models/messages');
-
-const Group =require('./models/Groups');
-
-const Groupmember=require('./models/groupmembers');
-
-
-app.use(cors({
-  origin: "http://localhost:3000",  
-  credentials: true
-}));
-
-
-
-app.use(bodyParser.json());
-app.use(express.json())
-
-// Serve static files from the same directory as the server
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-// Define a route to serve your HTML file
-
-app.get('/signup', (req, res) => {
-  res.sendFile(path.join(__dirname, './public', 'signup.html'));
-});
-
-
-
-const userRoute = require('./routes/userroute.js');
-const messageRoute = require('./routes/messageroute.js');
-
-app.use( userRoute);
-app.use(messageRoute);
+app.use(homePageRoutes);
+app.use(userRoutes);
+app.use(chatRoutes);
+app.use(groupRoutes);
+app.use(adminRoutes);
 
 
-User.hasMany(Message);
-Message.belongsTo(User , { constraints: true });
+User.hasMany(Chats);
+Chats.belongsTo(User);
+
+User.hasMany(ArchivedChats);
+ArchivedChats.belongsTo(User);
+
+Groups.hasMany(Chats);
+Chats.belongsTo(Groups);
+
+Groups.hasMany(ArchivedChats);
+ArchivedChats.belongsTo(Groups);
+
+User.belongsToMany(Groups, { through: UserGroup });
+Groups.belongsToMany(User, { through: UserGroup });
+
+User.hasMany(ForgotPassword);
+ForgotPassword.belongsTo(User);
 
 
-User.belongsToMany(Group, { through: Groupmember });
-Group.belongsToMany(User, { through: Groupmember });
-Group.belongsTo(User)
-Group.hasMany(Message);
-Message.belongsTo(Group);
+archivedChatsJob.start();
 
 
-sequelize.sync()
-
-  .catch(err => {
-    console.log(err);
-  });
-
-app.listen(process.env.PORT || 3000, () => console.log('app running in localhost:3000')); // Start the server
+sequelize.sync().
+    then((result) => {
+        app.listen(process.env.PORT, () => {
+            console.log(`Server is running on port ${process.env.PORT}`);
+        });
+    }).catch((err) => {
+        console.log(err);
+    });

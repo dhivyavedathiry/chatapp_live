@@ -1,41 +1,58 @@
-const sendMessageBtn = document.getElementById("sendMessageBtn");
+const sendBtn = document.getElementById("sendBtn");
 const messageForm = document.getElementById("messageForm");
 const messageInput = document.getElementById("messageInput");
-const chatMessagesDiv = document.getElementById('messageArea');
+const chatMessagesDiv = document.getElementById('chatMessages');
+const dropdownMenuButton = document.getElementById("dropdownMenuButton");
 const logoutBtn = document.getElementById("logoutBtn");
+const normalChatBtn = document.getElementById("normalChatBtn");
+const inviteBtn = document.getElementById("inviteBtn");
+const promoteBtn = document.getElementById("promoteBtn");
+const demoteBtn = document.getElementById("demoteBtn");
+const removeUserBtn = document.getElementById("removeUserBtn");
+const leaveGroupBtn = document.getElementById("leaveGroupBtn");
+const deleteGroupBtn = document.getElementById("deleteGroupBtn");
 const createGroupBtn = document.getElementById('createGroupBtn');
 const groupList = document.getElementById('groupList');
+const attachBtn = document.getElementById("attachBtn");
+const fileInput = document.getElementById("fileInput");
+
 
 let currentGroupId = null;
 let fetchNewMessagesInterval;
 
-// Logout user
+
 logoutBtn.addEventListener('click', (event) => {
     event.preventDefault();
     localStorage.removeItem('token');
+    localStorage.removeItem('normalMessages');
     window.location.href = 'homePage.html';
 });
 
-// Send a new message
+
 messageForm.addEventListener('submit', async (event) => {
     event.preventDefault();
     try {
         const token = localStorage.getItem('token');
-        const message = { message: messageInput.value, groupId: currentGroupId };
-        const response = await axios.post('/sendMessage', message, { headers: { Authorization: token } });
+        const message = {
+            message: messageInput.value,
+            groupId: currentGroupId
+        }
+
+        const response = await axios.post('/message/sendMessage', message, { headers: { Authorization: token } });
 
         if (response.data.success) {
             messageInput.value = '';
-            displayMessages([response.data.savedMessages]);
-            saveMessagesToLocalStorage([response.data.savedMessages]);
+            displayMessages([response.data.savedMessages]);  //display new messages
+            saveMessagesToLocalStorage([response.data.savedMessages]);  //save messages to localStorage
         }
+
     } catch (error) {
         console.log(error);
         alert("Failed to send message");
     }
 });
 
-// On page load
+
 document.addEventListener('DOMContentLoaded', (event) => {
     const token = localStorage.getItem('token');
     const decodedToken = jwt_decode(token);
@@ -53,11 +70,39 @@ document.addEventListener('DOMContentLoaded', (event) => {
     fetchNewMessagesInterval = setInterval(() => {
         fetchNewMessages(token);
     }, 1000);
+
+    dropdownMenuButton_State();
+
+
+    //multimedia sharing features -->
+    attachBtn.addEventListener('click', (event) => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        const token = localStorage.getItem('token');
+
+        if (file) {
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await axios.post('/file/upload', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data', 'Authorization': token }
+                });
+
+                if (response.data.success) {
+                    messageInput.value = response.data.fileUrl;
+                }
+
+            } catch (error) {
+                console.log("File upload error", error)
+            }
+        }
+    });
+
 });
-
-// Other functions like displayMessages, saveMessagesToLocalStorage, etc., remain the same
-
-
 
 
 function displayMessages(messages) {
@@ -102,9 +147,9 @@ async function fetchNewMessages(token) {
     const lastMessageId = existingMessages.length ? existingMessages[existingMessages.length - 1].id : null;
 
     try {
-        let url = '/getMessages';
+        let url = '/message/getMessages';
         if (currentGroupId) {
-            url = `/getGroupMessages/${currentGroupId}`
+            url = `/message/getGroupMessages/${currentGroupId}`
         }
         url += `?lastMessageId=${lastMessageId}`;
 
@@ -125,6 +170,35 @@ async function fetchNewMessages(token) {
 }
 
 
+// attachBtn.addEventListener('click', (event) => {
+//     // event.preventDefault();
+//     fileInput.click();
+// });
+
+
+// fileInput.addEventListener('click', async (event) => {
+//     // event.preventDefault();
+//     const file = event.target.files[0];
+//     const token = localStorage.getItem('token');
+
+//     if (file) {
+//         try {
+//             const formData = new FormData();
+//             formData.append('file', file);
+
+//             const response = await axios.post('/file/upload', formData, {
+//                 headers: { 'Content-Type': 'multipart/form-data', 'Authorization': token }
+//             });
+
+//             if (response.data.success) {
+//                 messageInput.value = response.data.fileUrl;
+//             }
+
+//         } catch (error) {
+//             console.log("File upload error", error)
+//         }
+//     }
+// });
 
 
 
@@ -136,7 +210,7 @@ createGroupBtn.addEventListener('click', async (event) => {
     if (groupName) {
         try {
             const token = localStorage.getItem('token');
-            const result = await axios.post('/createGroup', { name: groupName }, { headers: { 'Authorization': token } });
+            const result = await axios.post('/group/createGroup', { name: groupName }, { headers: { 'Authorization': token } });
             if (result.data.success) {
                 alert("Group created successfully");
                 fetchGroups();
@@ -181,41 +255,38 @@ function displayGroups(groups) {
 }
 
 
+function switchGroups(groupId, groupName) {
+    currentGroupId = groupId;
+    chatMessagesDiv.innerHTML = '';
+    const welcomeMsg = document.getElementById("welcomeMsg");
+    welcomeMsg.textContent = groupName;
+    localStorage.removeItem(`groupMessages_${groupId}`);
+    fetchNewMessages(localStorage.getItem('token'));
+    dropdownMenuButton_State();
+}
 
 
+function switchToNormalChat() {
+    currentGroupId = null;
 
-inviteBtn.addEventListener('click', async (event) => {
-    event.preventDefault();
-    const userEmail = prompt("Enter the email of the user you want to invite: ");
+    chatMessagesDiv.innerHTML = '';
+    const welcomeMsg = document.getElementById("welcomeMsg");
+    const decodedToken = jwt_decode(localStorage.getItem('token'));
+    welcomeMsg.textContent = `Welcome ${decodedToken.name}`;
 
-    if (userEmail) {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(`/inviteToGroup/${currentGroupId}`, { email: userEmail }, { headers: { 'Authorization': token } });
+    localStorage.removeItem('normalMessages'); // Clear stored messages when switching to normal chat
 
-            if (response.data.success) {
-                alert("User added successfully");
+    fetchNewMessages(localStorage.getItem('token'));
+    dropdownMenuButton_State();
+}
 
-            }
 
-        } catch (error) {
-            if (error.response) {
-                if (error.response.status === 403) {
-                    alert(error.response.data.message);
-
-                } else if (error.response.status === 404) {
-                    alert(error.response.data.message);
-
-                } else {
-                    alert("Error occurred while inviting user");
-                }
-            } else {
-                alert("Error inviting user, failed !!");
-                console.log(error);
-            }
-        }
-
+function dropdownMenuButton_State() {
+    if (currentGroupId) {
+        dropdownMenuButton.style.display = 'block';
     } else {
-        alert("email field can't be empty");
+        dropdownMenuButton.style.display = 'none';
     }
-});
+}
+
+normalChatBtn.addEventListener('click', switchToNormalChat);
