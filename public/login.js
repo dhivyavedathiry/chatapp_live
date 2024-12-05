@@ -29,4 +29,3 @@ function login(event) {
             document.body.innerHTML += `<div style="color:red;">${err.response?.data?.message || err.message}</div>`;
         });
 }
-

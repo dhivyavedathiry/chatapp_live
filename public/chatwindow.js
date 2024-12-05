@@ -219,5 +219,3 @@ inviteBtn.addEventListener('click', async (event) => {
         alert("email field can't be empty");
     }
 });
-
-
