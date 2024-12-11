@@ -290,3 +290,227 @@ function dropdownMenuButton_State() {
 }
 
 normalChatBtn.addEventListener('click', switchToNormalChat);
+
+
+inviteBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const userEmail = prompt("Enter the email of the user you want to invite: ");
+
+    if (userEmail) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/group/inviteToGroup/${currentGroupId}`, { email: userEmail }, { headers: { 'Authorization': token } });
+
+            if (response.data.success) {
+                alert("User added successfully");
+
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred while inviting user");
+                }
+            } else {
+                alert("Error inviting user, failed !!");
+                console.log(error);
+            }
+        }
+
+    } else {
+        alert("email field can't be empty");
+    }
+});
+
+
+promoteBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const userEmail = prompt("Enter the email of the user to be made admin:");
+
+    if (userEmail) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/admin/promote/${currentGroupId}`, { email: userEmail }, { headers: { 'Authorization': token } });
+            if (response.data.success) {
+                alert(`${userEmail} is now an admin`);
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred while promoting user");
+                }
+            } else {
+                alert("Error promoting user, failed !!");
+                console.log(error);
+            }
+
+        }
+
+    } else {
+        alert("email field can't be empty");
+    }
+});
+
+
+demoteBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const userEmail = prompt("Enter the email of the user to be demoted:");
+
+    if (userEmail) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/admin/demote/${currentGroupId}`, { email: userEmail }, { headers: { 'Authorization': token } });
+            if (response.data.success) {
+                alert(`${userEmail} successfully removed from admin`);
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred while demoting user");
+                }
+            } else {
+                alert("Error demoting user, failed !!");
+                console.log(error);
+            }
+
+        }
+
+    } else {
+        alert("email field can't be empty");
+    }
+});
+
+
+removeUserBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const userEmail = prompt("Enter the email of the user to be removed:");
+
+    if (userEmail) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/admin/removeUser/${currentGroupId}`, { email: userEmail }, { headers: { 'Authorization': token } });
+            if (response.data.success) {
+                alert(`${userEmail} is removed from the group successfully`);
+                fetchGroups();
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred while removing user");
+                }
+            } else {
+                alert("Error removing user, failed !!");
+                console.log(error);
+            }
+
+        }
+
+    } else {
+        alert("email field can't be empty");
+    }
+});
+
+
+leaveGroupBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const confirmation = confirm("Are you sure you want to leave the group?");
+
+    if (confirmation) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`/group/leaveGroup/${currentGroupId}`, {}, { headers: { 'Authorization': token } });
+
+            if (response.data.success) {
+                alert("You have left the group successfully");
+                fetchGroups();
+                switchToNormalChat();
+                clearInterval(fetchNewMessagesInterval);
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred while leaving group");
+
+                }
+            } else {
+                alert("Error leaving group, failed !!");
+                console.log(error);
+            }
+
+        }
+    }
+});
+
+
+deleteGroupBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const confirmation = confirm("Are you sure you want to delete the group?");
+
+    if (confirmation) {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.delete(`/group/deleteGroup/${currentGroupId}`, { headers: { 'Authorization': token } });
+
+            if (response.data.success) {
+                alert("Group deleted successfully");
+                // fetchGroups();
+                // switchToNormalChat();
+                // return;
+                localStorage.removeItem(`groupMessages_${currentGroupId}`);
+                window.location.reload();
+            }
+
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    alert(error.response.data.message);
+
+                } else if (error.response.status === 404) {
+                    alert(error.response.data.message);
+
+                } else {
+                    alert("Error occurred in deletion");
+
+                }
+            } else {
+                alert("Error deleting group, failed !!");
+                console.log(error);
+            }
+
+        }
+    }
+});
