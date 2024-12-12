@@ -1,6 +1,6 @@
 const User = require('../models/users.js');
 const Chats = require('../models/chats.js');
-//const FileUrls = require('../models/fileUrls.js');
+const FileUrls = require('../models/fileUrls.js');
 
 const Sequelize = require('sequelize');
 const AWS = require("aws-sdk");
