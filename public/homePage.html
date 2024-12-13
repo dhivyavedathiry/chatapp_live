@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Group Chat App</title>
+  <title>Chat App</title>
   <meta name="description" content="">
   <meta name="keywords" content="">
 
@@ -18,40 +18,39 @@
 <body>
 
   <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+    <div class="container-fluid container-xl d-flex flex-column align-items-center"> <!-- Adjusted for vertical alignment -->
       <a href="homePage.html" class="logo d-flex align-items-center">
         <i class="bi bi-chat-dots-fill me-2 icon"></i>
-        <h1 id="group-chat-app">Group Chat App</h1>
+        <h1 id="group-chat-app">Chat App</h1>
       </a>
     </div>
   </header>
-
-  <section id="hero" class="hero d-flex align-items-center">
+  <section id="hero" class="hero d-flex flex-column align-items-center justify-content-center">
+    <!-- Centered the hero section -->
     <div class="container">
-      <div class="row gy-4 d-flex justify-content-between">
-        <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-          <h2>Welcome to group chat app</h2>
-          <p>Chat effortlessly, connect instantly. Stay close with your group anytime, anywhere.</p>
-          <div class="d-flex">
-            <button type="button" class="btn custom-btn btn-lg me-2 mb-2 mb-md-0" data-bs-toggle="modal"
-              data-bs-target="#signupModal">Get Started</button>
-            <button type="button" class="btn btn-outline-custom btn-lg" data-bs-toggle="modal"
-              data-bs-target="#loginModal">Login</button>
-          </div>
-        </div>
-        <div class="col-lg-5 order-1 order-lg-2 mario">
+      <div class="row gy-4 align-items-center"> <!-- Removed flex-column to arrange horizontally -->
+        <div class="col-lg-5 order-1 order-lg-1 mario d-flex justify-content-center"> <!-- Place mario to the left -->
           <img src="img/mario.png" class="img-fluid" alt="chat illustration">
+        </div>
+        <div class="col-lg-6 order-2 order-lg-2 d-flex flex-column align-items-center"> <!-- Content follows -->
+          <h2>Warm welcome to the group chat platform</h2>
+          <p>Stay close to loved ones and connected to your work, anytime, anywhere.</p>
+          <div class="d-flex flex-column align-items-center">
+            <button type="button" class="btn custom-btn btn-lg me-2 mb-2" data-bs-toggle="modal" data-bs-target="#signupModal">Get Started</button>
+            <button type="button" class="btn btn-outline-custom btn-lg" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
 
   <!-- Sign Up Modal -->
   <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="signupModalLabel">Register yourself to get started</h5>
+          <h5 class="modal-title" id="signupModalLabel">Register here</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -89,7 +88,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="loginModalLabel">Sign in to start using chat app</h5>
+          <h5 class="modal-title" id="loginModalLabel">Sign in and use chat app</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">

@@ -1,23 +1,34 @@
 :root {
-    --background-color: #ffffff;
-    --default-color: #212529;
-    --heading-color: #2d465e;
-    --accent-color: #5777ba;
-    --surface-color: #ffffff;
-    --contrast-color: #ffffff;
+    --background-color: #798a449e;
+    --default-color: #9a40bea8;
+    --heading-color: #25a355;
+    --accent-color: #a648459e;
+    --surface-color: #975491a9;
+    --contrast-color: #5e8633;
 }
 
 body {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    background-color: var(--background-color);
+    height: 110vh;
+    background-color: #f0f4c3; /* Updated background color */
     margin: 0;
+    position: relative; /* Ensure relative positioning for absolute elements */
+}
+
+/* Make all heading fonts italic */
+h1, h2, h3, h4, h5, h6 {
+    font-style: italic;
+}
+
+/* Italicize button fonts */
+button {
+    font-style: italic;
 }
 
 .container {
     display: flex;
-    height: calc(100vh - 10px);
+    height: calc(110vh - 10px);
     margin-bottom: 10px;
     padding: 0 10px; /* Changed from margin-left and margin-right to padding */
 }
@@ -30,52 +41,61 @@ body {
     padding: 10px;
     background-color: var(--surface-color);
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 5px rgba(60, 120, 56, 0.3);
     height: 100%;
 }
 
 .narrow-chat-container {
-    width: 250px;
+    width: 200px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 10px;
     background-color: var(--surface-color);
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 5px rgba(99, 169, 67, 0.3);
     height: 100%;
     margin-right: 20px;
 }
 
 .chat-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     text-align: center;
     padding: 10px;
-    background-color: var(--accent-color);
-    color: var(--contrast-color);
+    background-color: #bbdefb; /* Updated background color */
+    color: #0d47a1; /* Updated font color */
     border-radius: 10px;
 }
 
 .chat-header h1 {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     color: var(--contrast-color);
     margin-bottom: 5px;
 }
 
-.logout-btn {
-    font-size: 0.9rem;
+#logoutBtn {
+    font-style: italic; /* Italicize the button */
+    font-size: 1.0rem;
     padding: 0.25rem 0.5rem;
-    background-color: #ffffff;
+    background-color: #3f3da8;
     border-color: #5D7BB8;
-    color: #5D7BB8;
+    color: #3e86b0;
+    position: absolute; /* Position the button absolutely */
+    top: 10px; /* Add spacing from the top */
+    right: 10px; /* Add spacing from the right */
     transition: all 0.3s ease;
 }
 
-.logout-btn:hover {
+#logoutBtn:hover {
     background-color: var(--accent-color);
     color: var(--contrast-color);
+}
+
+#createGroupBtn {
+    margin-top: 10px; /* Add spacing below the heading */
+    align-self: center; /* Center the button */
+    font-style: italic; /* Italicize the button */
 }
 
 .chat-messages {
@@ -85,31 +105,31 @@ body {
     background-color: var(--surface-color);
     border-radius: 10px;
     margin-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-height: calc(100vh - 200px);
+    box-shadow: 0 2px 5px rgba(169, 54, 189, 0.1);
+    max-height: calc(110vh - 200px);
 }
 
 .message {
     padding: 10px;
     margin-bottom: 5px;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 .message.user {
-    background-color: var(--accent-color);
-    color: var(--contrast-color);
+    background-color: #4caf50; /* Updated background color */
+    color: #ffffff; /* Updated font color */
     text-align: right;
 }
 
 .message.other {
-    background-color: #e9ecef;
-    color: var(--default-color);
+    background-color: #e0e0e0; /* Updated background color */
+    color: #212121; /* Updated font color */
     text-align: left;
 }
 
 .chat-input {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     align-items: center;
 }
 
@@ -127,28 +147,15 @@ body {
     flex-shrink: 0;
 }
 
-.custom-btn {
-    background-color: #5D7BB8;
-    border-color: #5D7BB8;
-    color: #fff;
-    transition: all 0.3s ease;
-}
-
-.custom-btn:hover {
-    background-color: #bbd0f0;
-    border-color: #5D7BB8;
-    color: #fff;
-}
-
 .group-list {
     flex: 1;
     overflow-y: auto;
-    padding: 15px;
+    padding: 20px;
     background-color: var(--surface-color);
     border-radius: 10px;
     margin-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-height: calc(100vh - 100px);
+    box-shadow: 0 2px 5px rgba(51, 135, 106, 0.1);
+    max-height: calc(110vh - 110px);
 }
 
 .group-item {
@@ -157,12 +164,12 @@ body {
     margin-bottom: 5px;
     font-weight: bolder;
     cursor: pointer;
-    background-color: #f8f9fa; 
+    background-color: #3c5293; 
     transition: background-color 0.3s ease; 
 }
 
 .group-item:hover {
-    background-color: #e2e6ea;
+    background-color: #65227a;
 }
 
 /* Ensure proper padding and alignment in the group-list */
@@ -170,8 +177,6 @@ body {
     padding: 10px; /* Add padding to make space inside the container */
     margin-bottom: 0; /* Remove bottom margin to align with container */
 }
-
-
 
 /* Add media query for responsive design */
 @media (max-width: 768px) {
