@@ -1,9 +1,9 @@
 :root {
-    --background-color: #798a449e;
-    --default-color: #9a40bea8;
+    --background-color: #448a7e9e;
+    --default-color: #a589b1a8;
     --heading-color: #25a355;
     --accent-color: #a648459e;
-    --surface-color: #975491a9;
+    --surface-color: #7699a9a9;
     --contrast-color: #5e8633;
 }
 
@@ -11,7 +11,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 110vh;
-    background-color: #f0f4c3; /* Updated background color */
+    background-color: #c3f4dc; /* Updated background color */
     margin: 0;
     position: relative; /* Ensure relative positioning for absolute elements */
 }
