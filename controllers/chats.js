@@ -85,13 +85,13 @@ exports.getMessages = async (req, res, next) => {
 
 
 const s3 = new AWS.S3({
-    accessKeyId: process.env.IAM_USER_ACCESS_KEY,
+    accessKeyId: process.env.IAM_USER_KEY,
     secretAccessKey: process.env.IAM_USER_SECRET,
-    Bucket: "groupchatapp1133"
+    Bucket: "groupchatapp09"
 });
 
 exports.uploadFile = async (req, res, next) => {
-    console.log("req object", req.file);
+   // console.log("req object", req.file);
     try {
 
         if (!req.file) {
@@ -101,7 +101,7 @@ exports.uploadFile = async (req, res, next) => {
         const fileName = `Upload_${req.user.id}/${req.file.originalname}`;
 
         const params = {
-            Bucket: "groupchatapp1133",
+            Bucket: "groupchatapp09",
             Key: fileName,
             Body: req.file.buffer,
             ContentType: req.file.mimetype,
