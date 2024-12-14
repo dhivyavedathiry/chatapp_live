@@ -26,8 +26,8 @@ exports.forgotPassword = async (req, res, next) => {
 
             const apiInstance = new brevo.TransactionalEmailsApi();
             const sender = {
-                email: "subhankarsharma24@gmail.com",
-                name: "Sharma",
+                email: "srisubramanian2012@gmail.com",
+                name: "Dhivya",
             };
 
             const receiver = [{
@@ -130,7 +130,7 @@ exports.updatePassword = async (req, res, next) => {
                     <body>
                         <div class="message">
                             <h2>Password successfully updated.</h2>
-                            <p>Log into your expense tracker account again.</p>
+                            <p>Log into your chat app again.</p>
                         </div>
                     </body>
                     <script>
