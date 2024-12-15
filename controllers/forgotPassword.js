@@ -1,20 +1,4 @@
-const { where } = require("sequelize");
-const uuid = require('uuid');
-const brevo = require("sib-api-v3-sdk");
-const bcrypt = require('bcrypt');
-
-const sequelize = require('../util/database.js');
-const Users = require('../models/users.js');
-const ForgotPassword = require('../models/forgotPassword.js');
-
-require('dotenv').config();
-
-
-const defaultClient = brevo.ApiClient.instance;
-const ApiKeyAuth = defaultClient.authentications['api-key'];
-ApiKeyAuth.apiKey = process.env.FORGOT_PASSWORD_API_KEY;
-
-
+yj
 exports.forgotPassword = async (req, res, next) => {
     try {
 
